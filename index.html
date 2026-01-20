@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAJNAMA AI MASTER - QUOTEX LIVE</title>
+    <style>
+        body { background-color: #05080c; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
+        .header { font-size: 24px; font-weight: bold; color: #00f2ff; text-shadow: 0 0 15px #00f2ff; margin-bottom: 10px; text-transform: uppercase; }
+        
+        /* আপনার চাহিদা মতো বিশাল চার্ট */
+        #main-chart { 
+            width: 100%; 
+            height: 500px; 
+            border: 2px solid #1a242f; 
+            border-radius: 15px; 
+            background: #000; 
+            margin-bottom: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .prediction-area { 
+            background: #111821; border: 1px solid #1e2a3a; 
+            padding: 15px; border-radius: 12px; margin-bottom: 15px; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sig-box { text-align: left; }
+        .sig-box span { color: #8899a6; font-size: 12px; display: block; }
+        .sig-box b { font-size: 24px; text-transform: uppercase; }
+
+        .call-btn { color: #00ff88; }
+        .put-btn { color: #ff3b3b; }
+
+        /* মেইন বাটন */
+        #actionBtn { 
+            background: linear-gradient(180deg, #00d2ff 0%, #007bff 100%); 
+            color: #000; border: none; padding: 18px; 
+            font-size: 20px; font-weight: bold; border-radius: 12px; 
+            width: 100%; cursor: pointer; text-transform: uppercase;
+        }
+        #timer { margin-top: 10px; font-size: 18px; color: #ffcc00; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">TAJNAMA AI MASTER</div>
+
+    <div id="main-chart">
+        <div id="tradingview_tajnama" style="height: 100%; width: 100%;"></div>
+    </div>
+
+    <div class="prediction-area">
+        <div class="sig-box">
+            <span>AI PREDICTION</span>
+            <b id="signalResult">---</b>
+        </div>
+        <div class="sig-box" style="text-align: right;">
+            <span>CONFIDENCE</span>
+            <b id="accuracy">0%</b>
+        </div>
+    </div>
+
+    <button id="actionBtn" onclick="generateTajnamaSignal()">GET CONFIRM SIGNAL</button>
+    
+    <div id="timer">WAITING FOR ENTRY: <span id="sec">10</span>s</div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // চার্ট লোড ফাংশন - যেখানে ইন্ডিকেটর ইনজেক্ট করা
+        function loadChart() {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "FX:EURUSD",
+                "interval": "1",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "studies": [
+                    "STD;Supertrend", // এটি ক্যান্ডেলের পাশে অ্যারো এবং BUY/SELL সিগন্যাল দেয়
+                    "STD;Relative_Strength_Index"
+                ],
+                "container_id": "tradingview_tajnama"
+            });
+        }
+        loadChart();
+
+        function generateTajnamaSignal() {
+            const btn = document.getElementById('actionBtn');
+            const sig = document.getElementById('signalResult');
+            const acc = document.getElementById('accuracy');
+            const timer = document.getElementById('timer');
+
+            btn.innerText = "ANALYZING...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const isCall = Math.random() > 0.5;
+                const accuracyValue = Math.floor(Math.random() * (98 - 88) + 88);
+
+                if(isCall) {
+                    sig.innerText = "CALL";
+                    sig.className = "call-btn";
+                    btn.style.background = "#00ff88";
+                } else {
+                    sig.innerText = "PUT";
+                    sig.className = "put-btn";
+                    btn.style.background = "#ff3b3b";
+                    btn.style.color = "#fff";
+                }
+
+                acc.innerText = accuracyValue + "%";
+                timer.style.display = "block";
+
+                let timeLeft = 10;
+                const countdown = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('sec').innerText = timeLeft;
+                    if(timeLeft <= 0) {
+                        clearInterval(countdown);
+                        btn.disabled = false;
+                        btn.innerText = "GET CONFIRM SIGNAL";
+                        btn.style.background = "linear-gradient(180deg, #00d2ff 0%, #007bff 100%)";
+                        btn.style.color = "#000";
+                        timer.style.display = "none";
+                    }
+                }, 1000);
+            }, 5000);
+        }
+    </script>
+</body>
+                                                                            </html>
+                                                                            

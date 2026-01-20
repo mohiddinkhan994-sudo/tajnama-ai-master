@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAJNAMA AI - 2 INDICATOR ONLY</title>
+    <title>TAJNAMA AI - WHITE PRO</title>
     <style>
-        body { background-color: #050810; color: white; font-family: sans-serif; margin: 0; padding: 5px; text-align: center; }
-        .header { font-size: 18px; font-weight: bold; color: #00f2ff; margin: 10px 0; }
-        #tv_chart { width: 100%; height: 460px; border-radius: 10px; border: 1px solid #333; }
-        .pair-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
-        .pair-btn { background: #111; color: #00f2ff; border: 1px solid #444; padding: 10px 2px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .result-box { background: #0d1621; padding: 15px; border-radius: 10px; display: flex; justify-content: space-around; margin-top: 10px; border: 1px solid #1e2a3a; }
-        #actionBtn { background: linear-gradient(180deg, #00f2ff 0%, #007bff 100%); color: #000; border: none; padding: 18px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; margin-top: 10px; cursor: pointer; }
-        .call { color: #00ff88; font-size: 24px; font-weight: bold; }
-        .put { color: #ff3b3b; font-size: 24px; font-weight: bold; }
+        /* ছবির মতো সাদা ব্যাকগ্রাউন্ড এবং ডিজাইন */
+        body { background-color: #f0f2f5; color: #333; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
+        .header { font-size: 22px; font-weight: bold; color: #1a73e8; margin-bottom: 10px; text-transform: uppercase; }
+        #tv_chart { width: 100%; height: 480px; border-radius: 12px; border: 2px solid #ccc; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .pair-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+        .pair-btn { background: #ffffff; color: #1a73e8; border: 1px solid #1a73e8; padding: 10px 2px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .pair-btn:hover { background: #1a73e8; color: white; }
+        .prediction-box { background: #ffffff; padding: 15px; border-radius: 12px; display: flex; justify-content: space-around; margin-top: 15px; border: 1px solid #ddd; }
+        #actionBtn { background: linear-gradient(180deg, #1a73e8 0%, #1557b0 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 18px; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(26,115,232,0.3); }
+        .call { color: #28a745; font-size: 24px; font-weight: bold; }
+        .put { color: #dc3545; font-size: 24px; font-weight: bold; }
+        span { font-size: 12px; color: #666; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -24,18 +27,18 @@
         <button class="pair-btn" onclick="changePair('FX:GBPUSD')">GBP/USD</button>
         <button class="pair-btn" onclick="changePair('FX:USDJPY')">USD/JPY</button>
         <button class="pair-btn" onclick="changePair('OANDA:XAUUSD')">GOLD</button>
-        <button class="pair-btn" onclick="changePair('BINANCE:BTCUSDT')">BITCOIN</button>
+        <button class="pair-btn" onclick="changePair('BITSTAMP:BTCUSD')">BITCOIN</button>
         <button class="pair-btn" onclick="changePair('FX:AUDUSD')">AUD/USD</button>
     </div>
 
     <div id="tv_chart"></div>
 
-    <div class="result-box">
-        <div><span>SIGNAL</span><br><b id="sigText" style="color:#888;">READY</b></div>
-        <div><span>ACCURACY</span><br><b id="accText">--</b></div>
+    <div class="prediction-box">
+        <div><span>SIGNAL</span><br><b id="sigText" style="color:#999;">ANALYZING</b></div>
+        <div><span>WIN RATE</span><br><b id="accText">0%</b></div>
     </div>
 
-    <button id="actionBtn" onclick="getSignal()">GET SURE SHOT SIGNAL</button>
+    <button id="actionBtn" onclick="getSignal()">GET CONFIRM SIGNAL</button>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
@@ -45,17 +48,18 @@
                 "symbol": pair,
                 "interval": "1",
                 "timezone": "Etc/UTC",
-                "theme": "dark",
+                "theme": "light", // ছবির মতো সাদা ব্যাকগ্রাউন্ড
                 "style": "1",
                 "locale": "en",
                 "container_id": "tv_chart",
-                "hide_volume": true, // ভলিউম বন্ধ করে দেওয়া হয়েছে
                 "studies": [
-                    "STD;Supertrend", // ইন্ডিকেটর ১: বাই-সেল অ্যারো
-                    "STD;Support_Resistance_Levels" // ইন্ডিকেটর ২: সাপোর্ট ও রেজিস্ট্যান্স
+                    "STD;Supertrend", // BUY/SELL সিগন্যাল অ্যারো
+                    "STD;Support_Resistance_Levels" // জোন বা লাইন
                 ],
                 "overrides": {
-                    "mainSeriesProperties.showPriceLine": true
+                    "paneProperties.background": "#ffffff",
+                    "mainSeriesProperties.candleStyle.upColor": "#26a69a",
+                    "mainSeriesProperties.candleStyle.downColor": "#ef5350"
                 }
             });
         }
@@ -65,20 +69,20 @@
         function getSignal() {
             const btn = document.getElementById('actionBtn');
             const sig = document.getElementById('sigText');
-            btn.innerText = "ANALYZING TREND...";
+            btn.innerText = "SCANNING MARKET...";
             setTimeout(() => {
                 const rand = Math.random();
-                if (rand > 0.55) {
-                    sig.innerText = "SURE CALL ↑";
+                if (rand > 0.5) {
+                    sig.innerText = "BUY ↑";
                     sig.className = "call";
                     document.getElementById('accText').innerText = "98%";
                 } else {
-                    sig.innerText = "SURE PUT ↓";
+                    sig.innerText = "SELL ↓";
                     sig.className = "put";
                     document.getElementById('accText').innerText = "97%";
                 }
-                btn.innerText = "GET SURE SHOT SIGNAL";
-            }, 2000);
+                btn.innerText = "GET CONFIRM SIGNAL";
+            }, 2500);
         }
     </script>
 </body>

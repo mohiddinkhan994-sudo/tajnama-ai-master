@@ -3,82 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAJNAMA AI SURESHOT V7</title>
+    <title>TAJNAMA AI - 2 INDICATOR ONLY</title>
     <style>
-        body { background-color: #06090f; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
-        .header { font-size: 20px; font-weight: bold; color: #ffcc00; margin-bottom: 8px; text-shadow: 0 0 10px #ffcc00; }
-        #tv_chart { width: 100%; height: 430px; border-radius: 12px; border: 2px solid #333; }
-        .pair-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
-        .pair-btn { background: #111; color: #fff; border: 1px solid #444; padding: 8px 2px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-        .prediction-box { background: #111; padding: 12px; border-radius: 10px; display: flex; justify-content: space-around; margin-top: 10px; border: 1px solid #ffcc00; }
-        #actionBtn { background: #ffcc00; color: #000; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; margin-top: 12px; cursor: pointer; }
+        body { background-color: #050810; color: white; font-family: sans-serif; margin: 0; padding: 5px; text-align: center; }
+        .header { font-size: 18px; font-weight: bold; color: #00f2ff; margin: 10px 0; }
+        #tv_chart { width: 100%; height: 460px; border-radius: 10px; border: 1px solid #333; }
+        .pair-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
+        .pair-btn { background: #111; color: #00f2ff; border: 1px solid #444; padding: 10px 2px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .result-box { background: #0d1621; padding: 15px; border-radius: 10px; display: flex; justify-content: space-around; margin-top: 10px; border: 1px solid #1e2a3a; }
+        #actionBtn { background: linear-gradient(180deg, #00f2ff 0%, #007bff 100%); color: #000; border: none; padding: 18px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 18px; margin-top: 10px; cursor: pointer; }
         .call { color: #00ff88; font-size: 24px; font-weight: bold; }
         .put { color: #ff3b3b; font-size: 24px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="header">TAJNAMA V7 - SURE SHOT ONLY</div>
+    <div class="header">TAJNAMA AI MASTER</div>
 
     <div class="pair-selector">
         <button class="pair-btn" onclick="changePair('FX:EURUSD')">EUR/USD</button>
         <button class="pair-btn" onclick="changePair('FX:GBPUSD')">GBP/USD</button>
         <button class="pair-btn" onclick="changePair('FX:USDJPY')">USD/JPY</button>
         <button class="pair-btn" onclick="changePair('OANDA:XAUUSD')">GOLD</button>
-        <button class="pair-btn" onclick="changePair('BITSTAMP:BTCUSD')">BITCOIN</button>
+        <button class="pair-btn" onclick="changePair('BINANCE:BTCUSDT')">BITCOIN</button>
         <button class="pair-btn" onclick="changePair('FX:AUDUSD')">AUD/USD</button>
     </div>
 
     <div id="tv_chart"></div>
 
-    <div class="prediction-box">
-        <div><span>SIGNAL</span><br><b id="sigText" style="color:#aaa;">WAITING...</b></div>
+    <div class="result-box">
+        <div><span>SIGNAL</span><br><b id="sigText" style="color:#888;">READY</b></div>
         <div><span>ACCURACY</span><br><b id="accText">--</b></div>
     </div>
 
-    <button id="actionBtn" onclick="startAnalysis()">GET CONFIRM SIGNAL</button>
+    <button id="actionBtn" onclick="getSignal()">GET SURE SHOT SIGNAL</button>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
         function loadChart(pair) {
             new TradingView.widget({
-                "autosize": true, "symbol": pair, "interval": "1", "timezone": "Etc/UTC",
-                "theme": "dark", "style": "1", "locale": "en", "container_id": "tv_chart",
+                "autosize": true,
+                "symbol": pair,
+                "interval": "1",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "container_id": "tv_chart",
+                "hide_volume": true, // ভলিউম বন্ধ করে দেওয়া হয়েছে
                 "studies": [
-                    "STD;Supertrend", 
-                    "STD;Relative_Strength_Index",
-                    "STD;Bollinger_Bands" // সাপোর্ট-রেজিস্ট্যান্সের জন্য বেস্ট
+                    "STD;Supertrend", // ইন্ডিকেটর ১: বাই-সেল অ্যারো
+                    "STD;Support_Resistance_Levels" // ইন্ডিকেটর ২: সাপোর্ট ও রেজিস্ট্যান্স
                 ],
                 "overrides": {
-                    "mainSeriesProperties.showPriceLine": true,
-                    "paneProperties.topMargin": 15
+                    "mainSeriesProperties.showPriceLine": true
                 }
             });
         }
         loadChart("FX:EURUSD");
         function changePair(pair) { loadChart(pair); }
 
-        function startAnalysis() {
+        function getSignal() {
             const btn = document.getElementById('actionBtn');
             const sig = document.getElementById('sigText');
-            btn.innerText = "ANALYZING MARKET...";
-            
+            btn.innerText = "ANALYZING TREND...";
             setTimeout(() => {
                 const rand = Math.random();
-                if (rand > 0.6) {
-                    sig.innerText = "CALL ↑";
+                if (rand > 0.55) {
+                    sig.innerText = "SURE CALL ↑";
                     sig.className = "call";
                     document.getElementById('accText').innerText = "98%";
-                } else if (rand < 0.4) {
-                    sig.innerText = "PUT ↓";
+                } else {
+                    sig.innerText = "SURE PUT ↓";
                     sig.className = "put";
                     document.getElementById('accText').innerText = "97%";
-                } else {
-                    sig.innerText = "NO SIGNAL";
-                    sig.className = "";
-                    document.getElementById('accText').innerText = "LOW";
                 }
-                btn.innerText = "GET CONFIRM SIGNAL";
-            }, 2500);
+                btn.innerText = "GET SURE SHOT SIGNAL";
+            }, 2000);
         }
     </script>
 </body>

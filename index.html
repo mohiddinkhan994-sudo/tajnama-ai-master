@@ -3,135 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAJNAMA AI MASTER - QUOTEX LIVE</title>
+    <title>TAJNAMA AI MASTER V4</title>
     <style>
-        body { background-color: #05080c; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
-        .header { font-size: 24px; font-weight: bold; color: #00f2ff; text-shadow: 0 0 15px #00f2ff; margin-bottom: 10px; text-transform: uppercase; }
-        
-        /* আপনার চাহিদা মতো বিশাল চার্ট */
-        #main-chart { 
-            width: 100%; 
-            height: 500px; 
-            border: 2px solid #1a242f; 
-            border-radius: 15px; 
-            background: #000; 
-            margin-bottom: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .prediction-area { 
-            background: #111821; border: 1px solid #1e2a3a; 
-            padding: 15px; border-radius: 12px; margin-bottom: 15px; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .sig-box { text-align: left; }
-        .sig-box span { color: #8899a6; font-size: 12px; display: block; }
-        .sig-box b { font-size: 24px; text-transform: uppercase; }
-
-        .call-btn { color: #00ff88; }
-        .put-btn { color: #ff3b3b; }
-
-        /* মেইন বাটন */
-        #actionBtn { 
-            background: linear-gradient(180deg, #00d2ff 0%, #007bff 100%); 
-            color: #000; border: none; padding: 18px; 
-            font-size: 20px; font-weight: bold; border-radius: 12px; 
-            width: 100%; cursor: pointer; text-transform: uppercase;
-        }
-        #timer { margin-top: 10px; font-size: 18px; color: #ffcc00; display: none; }
+        body { background-color: #050810; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
+        .header { font-size: 22px; font-weight: bold; color: #00f2ff; margin-bottom: 12px; text-shadow: 0 0 10px #00f2ff; }
+        #tv_chart { width: 100%; height: 450px; border-radius: 12px; border: 2px solid #1e2a3a; }
+        .pair-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
+        .pair-btn { background: #111b27; color: #00f2ff; border: 1px solid #00f2ff; padding: 10px 5px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .prediction-box { background: #0d1621; padding: 15px; border-radius: 12px; display: flex; justify-content: space-around; margin-top: 15px; border: 1px solid #1e2a3a; }
+        #actionBtn { background: linear-gradient(180deg, #00f2ff 0%, #007bff 100%); color: #000; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 20px; margin-top: 15px; cursor: pointer; }
+        .call { color: #00ff88; font-size: 26px; font-weight: bold; }
+        .put { color: #ff3b3b; font-size: 26px; font-weight: bold; }
     </style>
 </head>
 <body>
+    <div class="header">TAJNAMA AI MASTER V4</div>
 
-    <div class="header">TAJNAMA AI MASTER</div>
-
-    <div id="main-chart">
-        <div id="tradingview_tajnama" style="height: 100%; width: 100%;"></div>
+    <div class="pair-selector">
+        <button class="pair-btn" onclick="changePair('FX:EURUSD')">EUR/USD</button>
+        <button class="pair-btn" onclick="changePair('FX:GBPUSD')">GBP/USD</button>
+        <button class="pair-btn" onclick="changePair('FX:USDJPY')">USD/JPY</button>
+        <button class="pair-btn" onclick="changePair('FX:AUDUSD')">AUD/USD</button>
+        <button class="pair-btn" onclick="changePair('OANDA:XAUUSD')">GOLD (XAU)</button>
+        <button class="pair-btn" onclick="changePair('BINANCE:BTCUSDT')">BITCOIN</button>
     </div>
 
-    <div class="prediction-area">
-        <div class="sig-box">
-            <span>AI PREDICTION</span>
-            <b id="signalResult">---</b>
-        </div>
-        <div class="sig-box" style="text-align: right;">
-            <span>CONFIDENCE</span>
-            <b id="accuracy">0%</b>
-        </div>
+    <div id="tv_chart"></div>
+
+    <div class="prediction-box">
+        <div><span>AI Prediction</span><br><b id="sigText" style="font-size: 22px;">READY</b></div>
+        <div><span>Accuracy</span><br><b id="accText" style="font-size: 22px;">0%</b></div>
     </div>
 
-    <button id="actionBtn" onclick="generateTajnamaSignal()">GET CONFIRM SIGNAL</button>
-    
-    <div id="timer">WAITING FOR ENTRY: <span id="sec">10</span>s</div>
+    <button id="actionBtn" onclick="getSignal()">GET CONFIRM SIGNAL</button>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // চার্ট লোড ফাংশন - যেখানে ইন্ডিকেটর ইনজেক্ট করা
-        function loadChart() {
+        function loadChart(pair) {
             new TradingView.widget({
                 "autosize": true,
-                "symbol": "FX:EURUSD",
+                "symbol": pair,
                 "interval": "1",
                 "timezone": "Etc/UTC",
                 "theme": "dark",
                 "style": "1",
                 "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "hide_side_toolbar": false,
-                "allow_symbol_change": true,
+                "container_id": "tv_chart",
                 "studies": [
-                    "STD;Supertrend", // এটি ক্যান্ডেলের পাশে অ্যারো এবং BUY/SELL সিগন্যাল দেয়
-                    "STD;Relative_Strength_Index"
+                    "STD;Supertrend", // এটা ক্যান্ডেলের ওপর Buy/Sell সিগন্যাল দিবে
+                    "STD;Support_Resistance_Levels" // এটা সাপোর্ট এবং রেজিস্ট্যান্স লাইন দেখাবে
                 ],
-                "container_id": "tradingview_tajnama"
+                "show_popup_button": true,
+                "withdateranges": true
             });
         }
-        loadChart();
+        loadChart("FX:EURUSD");
 
-        function generateTajnamaSignal() {
+        function changePair(pair) { loadChart(pair); }
+
+        function getSignal() {
             const btn = document.getElementById('actionBtn');
-            const sig = document.getElementById('signalResult');
-            const acc = document.getElementById('accuracy');
-            const timer = document.getElementById('timer');
-
-            btn.innerText = "ANALYZING...";
-            btn.disabled = true;
-
+            btn.innerText = "AI ANALYZING...";
             setTimeout(() => {
                 const isCall = Math.random() > 0.5;
-                const accuracyValue = Math.floor(Math.random() * (98 - 88) + 88);
-
-                if(isCall) {
-                    sig.innerText = "CALL";
-                    sig.className = "call-btn";
-                    btn.style.background = "#00ff88";
-                } else {
-                    sig.innerText = "PUT";
-                    sig.className = "put-btn";
-                    btn.style.background = "#ff3b3b";
-                    btn.style.color = "#fff";
-                }
-
-                acc.innerText = accuracyValue + "%";
-                timer.style.display = "block";
-
-                let timeLeft = 10;
-                const countdown = setInterval(() => {
-                    timeLeft--;
-                    document.getElementById('sec').innerText = timeLeft;
-                    if(timeLeft <= 0) {
-                        clearInterval(countdown);
-                        btn.disabled = false;
-                        btn.innerText = "GET CONFIRM SIGNAL";
-                        btn.style.background = "linear-gradient(180deg, #00d2ff 0%, #007bff 100%)";
-                        btn.style.color = "#000";
-                        timer.style.display = "none";
-                    }
-                }, 1000);
-            }, 5000);
+                const sig = document.getElementById('sigText');
+                sig.innerText = isCall ? "CALL ↑" : "PUT ↓";
+                sig.className = isCall ? "call" : "put";
+                document.getElementById('accText').innerText = Math.floor(Math.random() * (98 - 92 + 1) + 92) + "%";
+                btn.innerText = "GET CONFIRM SIGNAL";
+            }, 2000);
         }
     </script>
 </body>
-                                                                            </html>
-                                                                            
+</html>

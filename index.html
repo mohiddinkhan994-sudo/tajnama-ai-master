@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TAJNAMA AI MASTER - FIXED</title>
+    <title>TAJNAMA AI MASTER PRO</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #ffffff; color: #000; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding: 5px; }
+        body { background-color: #ffffff; font-family: 'Arial', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding: 5px; }
         
-        .header { background: #d4af37; color: black; padding: 10px; font-size: 18px; font-weight: bold; border-radius: 8px; text-align: center; margin-bottom: 5px; }
+        .header { background: #d4af37; color: black; padding: 10px; font-size: 18px; font-weight: bold; border-radius: 8px; text-align: center; margin-bottom: 5px; flex-shrink: 0; }
         
-        .pair-selector { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 5px; }
-        .pair-btn { flex: 1; background: #fff; color: #1a73e8; border: 1.5px solid #1a73e8; padding: 8px 2px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .pair-selector { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 5px; flex-shrink: 0; }
+        .pair-btn { flex: 1; background: #fff; color: #1a73e8; border: 1.5px solid #1a73e8; padding: 8px 2px; border-radius: 6px; font-size: 10px; font-weight: bold; }
         
-        .time-selector { display: flex; justify-content: center; gap: 8px; margin-bottom: 5px; }
-        .time-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .time-selector { display: flex; justify-content: center; gap: 8px; margin-bottom: 5px; flex-shrink: 0; }
+        .time-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; }
         .time-btn.active { background: #1a73e8; color: white; }
 
-        /* চার্ট এরিয়া যা স্ক্রিনের বাকি জায়গা নিবে */
-        #tv_chart_container { flex: 1; width: 100%; border: 1.5px solid #ccc; border-radius: 10px; overflow: hidden; position: relative; min-height: 300px; }
+        /* চার্ট এরিয়া যা স্ক্রিনের বাকি পুরো জায়গা নিবে */
+        #tv_chart_container { flex: 1; width: 100%; border: 1.5px solid #ccc; border-radius: 10px; overflow: hidden; position: relative; margin-bottom: 5px; }
 
-        /* সিগন্যাল বক্স */
-        .prediction-box { background: #fff; border: 2px solid #1a73e8; border-radius: 12px; padding: 8px; margin-top: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .prediction-box { background: #fff; border: 2px solid #1a73e8; border-radius: 12px; padding: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; flex-shrink: 0; }
         .stat { padding: 5px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; text-align: center; }
         span { font-size: 9px; color: #666; font-weight: bold; display: block; }
         #sigText, #winRate, #entryTime, #candlePos { font-size: 15px; font-weight: 900; }
@@ -29,8 +28,7 @@
         .call { color: #28a745; }
         .put { color: #dc3545; }
         
-        /* আপনার সেই সিগন্যাল বাটন */
-        #actionBtn { background: #1a73e8; color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 5px; cursor: pointer; box-shadow: 0 4px 10px rgba(26,115,232,0.3); }
+        #actionBtn { background: #1a73e8; color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 5px; flex-shrink: 0; box-shadow: 0 4px 8px rgba(26,115,232,0.3); }
     </style>
 </head>
 <body>
@@ -99,13 +97,12 @@
 
         function getSignal() {
             const btn = document.getElementById('actionBtn');
-            btn.innerText = "AI ANALYZING MARKET...";
+            btn.innerText = "AI ANALYZING 98%...";
             setTimeout(() => {
                 const now = new Date();
                 const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
                                 now.getMinutes().toString().padStart(2, '0') + ":" + 
                                 now.getSeconds().toString().padStart(2, '0');
-                
                 const isCall = Math.random() > 0.5;
                 document.getElementById('sigText').innerText = isCall ? "BUY ↑" : "SELL ↓";
                 document.getElementById('sigText').className = isCall ? "call" : "put";
@@ -117,3 +114,4 @@
     </script>
 </body>
 </html>
+

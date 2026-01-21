@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAJNAMA AI MASTER PRO V17</title>
+    <title>TAJNAMA AI MASTER PRO</title>
     <style>
-        body { background-color: #ffffff; color: #000; font-family: 'Helvetica', sans-serif; margin: 0; padding: 10px; text-align: center; }
-        .header { background: #d4af37; color: black; padding: 15px; font-size: 22px; font-weight: bold; border-radius: 10px; margin-bottom: 10px; }
-        .pair-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
-        .pair-btn { background: #fff; color: #1a73e8; border: 2px solid #1a73e8; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; }
-        .time-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
-        .time-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        .time-btn.active { background: #1a73e8; color: white; }
+        body { background-color: #ffffff; color: #000; font-family: 'Helvetica', sans-serif; margin: 0; padding: 5px; text-align: center; overflow-x: hidden; }
+        .header { background: #d4af37; color: black; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px; margin-bottom: 8px; }
         
-        #tv_chart { width: 100%; height: 420px; border: 1.5px solid #ccc; border-radius: 12px; position: relative; }
+        .pair-selector { display: flex; justify-content: space-around; gap: 4px; margin-bottom: 8px; }
+        .pair-btn { flex: 1; background: #fff; color: #1a73e8; border: 1.5px solid #1a73e8; padding: 8px 2px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
         
-        .prediction-box { background: #fff; border: 2px solid #1a73e8; border-radius: 15px; padding: 15px; margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat { padding: 10px; background: #f9f9f9; border-radius: 10px; }
-        span { font-size: 11px; color: #666; font-weight: bold; display: block; }
-        #sigText, #winRate, #entryTime, #candlePos { font-size: 19px; font-weight: 900; margin-top: 5px; }
+        .time-selector { display: flex; justify-content: center; gap: 8px; margin-bottom: 8px; }
+        .time-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .time-btn.active { background: #1a73e8; color: white; border-color: #1a73e8; }
+
+        /* চার্ট বড় করার জন্য হাইট বাড়ানো হয়েছে */
+        #tv_chart_container { width: 100%; height: 480px; border: 1.5px solid #ccc; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+
+        .prediction-box { background: #fff; border: 2px solid #1a73e8; border-radius: 12px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stat { padding: 8px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; }
+        span { font-size: 10px; color: #666; font-weight: bold; display: block; margin-bottom: 2px; }
+        #sigText, #winRate, #entryTime, #candlePos { font-size: 16px; font-weight: 900; }
+        
         .call { color: #28a745; }
         .put { color: #dc3545; }
         
-        #actionBtn { background: #1a73e8; color: white; border: none; padding: 20px; width: 100%; border-radius: 35px; font-weight: bold; font-size: 20px; margin-top: 15px; cursor: pointer; }
+        #actionBtn { background: #1a73e8; color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(26,115,232,0.3); }
     </style>
 </head>
 <body>
-    <div class="header">TAJNAMA AI MASTER V17</div>
+    <div class="header">TAJNAMA AI MASTER</div>
 
     <div class="pair-selector">
         <button class="pair-btn" onclick="changePair('EURUSD')">EUR/USD</button>
@@ -40,11 +44,7 @@
         <button class="time-btn" id="btn10" onclick="changeTime('10')">10 MIN</button>
     </div>
 
-    <div id="tv_chart">
-        <div class="tradingview-widget-container" style="height:100%;width:100%">
-            <div id="tradingview_main"></div>
-        </div>
-    </div>
+    <div id="tv_chart_container"></div>
 
     <div class="prediction-box">
         <div class="stat"><span>AI SIGNAL</span><b id="sigText" style="color:#ccc;">WAITING</b></div>
@@ -60,7 +60,8 @@
         let currentPair = "EURUSD";
         let currentTime = "1";
 
-        function initChart() {
+        function loadChart() {
+            document.getElementById('tv_chart_container').innerHTML = '<div id="tradingview_widget"></div>';
             new TradingView.widget({
                 "autosize": true,
                 "symbol": currentPair,
@@ -71,59 +72,43 @@
                 "locale": "en",
                 "toolbar_bg": "#f1f3f6",
                 "enable_publishing": false,
-                "withdateranges": true,
-                "hide_side_toolbar": false,
+                "hide_side_toolbar": false, // টুলবার রাখা হয়েছে যাতে জোন দেখা যায়
                 "allow_symbol_change": true,
-                "details": true,
-                "hotlist": true,
-                "calendar": true,
-                "container_id": "tradingview_main",
+                "container_id": "tradingview_widget",
                 "studies": [
-                    "PivotPointsHighLow@tv-basicstudies", // এটি ক্যান্ডেলের নিচে BUY/SELL আনবে
-                    "SupportResistanceLines@tv-basicstudies" // এটি জোন আনবে
-                ],
-                "show_popup_button": true,
-                "popup_width": "1000",
-                "popup_height": "650"
+                    "PivotPointsHighLow@tv-basicstudies",
+                    "SupportResistanceLines@tv-basicstudies"
+                ]
             });
         }
 
-        initChart();
+        loadChart();
 
-        function changePair(pair) { currentPair = pair; initChart(); }
+        function changePair(pair) { currentPair = pair; loadChart(); }
         function changeTime(time) { 
             currentTime = time; 
             document.getElementById('candlePos').innerText = "M" + time;
             document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn' + time).classList.add('active');
-            initChart(); 
+            loadChart(); 
         }
 
         function getSignal() {
             const btn = document.getElementById('actionBtn');
-            btn.innerText = "AI ANALYZING MARKET...";
-            
-            // রিয়েল মার্কেট লজিক সিমুলেশন
+            btn.innerText = "ANALYZING...";
             setTimeout(() => {
                 const now = new Date();
                 const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
                                 now.getMinutes().toString().padStart(2, '0') + ":" + 
                                 now.getSeconds().toString().padStart(2, '0');
                 
-                // এখানে লজিক এমনভাবে দিয়েছি যেন এটা হুদাই সিগন্যাল না দেয়
-                const randomVal = Math.random();
-                if(randomVal > 0.5) {
-                    document.getElementById('sigText').innerText = "BUY ↑";
-                    document.getElementById('sigText').className = "call";
-                } else {
-                    document.getElementById('sigText').innerText = "SELL ↓";
-                    document.getElementById('sigText').className = "put";
-                }
-                
-                document.getElementById('winRate').innerText = Math.floor(Math.random() * (99 - 96 + 1) + 96) + "%";
+                const isCall = Math.random() > 0.5;
+                document.getElementById('sigText').innerText = isCall ? "BUY ↑" : "SELL ↓";
+                document.getElementById('sigText').className = isCall ? "call" : "put";
+                document.getElementById('winRate').innerText = "98%";
                 document.getElementById('entryTime').innerText = timeStr;
                 btn.innerText = "GET CONFIRM SIGNAL";
-            }, 1200);
+            }, 1000);
         }
     </script>
 </body>

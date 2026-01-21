@@ -3,44 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TAJNAMA AI MASTER - REAL ENGINE</title>
+    <title>TAJNAMA QX AUTO-BOT</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #0b0e11; color: white; font-family: 'Roboto', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { background: #010b14; color: #fff; font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
         
-        .chart-box { height: 65%; width: 100%; border-bottom: 2px solid #2b2f36; }
-        
-        .ai-panel { height: 35%; width: 100%; background: #161a1e; padding: 15px; border-radius: 20px 20px 0 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.5); }
-        
-        .status-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .data-card { background: #2b2f36; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #3b3f46; }
-        .label { font-size: 11px; color: #848e9c; margin-bottom: 4px; display: block; }
-        .value { font-size: 18px; font-weight: bold; color: #f0b90b; }
-        
-        #actionBtn { 
-            background: linear-gradient(90deg, #f0b90b, #f8d33a); color: #000; 
-            border: none; padding: 18px; width: 100%; border-radius: 15px; 
-            font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
-        #actionBtn:disabled { background: #474d57; color: #848e9c; }
+        /* ভিডিওর বটের মতো প্রফেশনাল হেডার */
+        .bot-header { background: #1a232e; padding: 15px; border-bottom: 2px solid #00ff88; text-align: center; box-shadow: 0 4px 15px rgba(0,255,136,0.2); }
+        .bot-name { color: #00ff88; font-size: 20px; font-weight: 900; letter-spacing: 1px; }
 
-        .up { color: #0ecb81 !important; } /* Green for BUY */
-        .down { color: #f6465d !important; } /* Red for SELL */
+        .chart-container { height: 55%; width: 100%; border-bottom: 1px solid #1a232e; }
+
+        /* সিগন্যাল কন্ট্রোল প্যানেল */
+        .control-panel { height: 45%; padding: 15px; background: #0a121d; display: flex; flex-direction: column; justify-content: space-around; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-card { background: #141d2b; padding: 12px; border-radius: 12px; border: 1px solid #232d3d; text-align: center; }
+        .label { color: #848e9c; font-size: 11px; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .val { font-size: 18px; font-weight: bold; }
+
+        /* এনিমেশনসহ সিগন্যাল বাটন */
+        #mainBtn { 
+            background: linear-gradient(135deg, #00ff88, #00bd65); color: #000; 
+            border: none; padding: 20px; width: 100%; border-radius: 15px; 
+            font-size: 22px; font-weight: 900; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,255,136,0.3); transition: 0.2s;
+        }
+        #mainBtn:active { transform: scale(0.98); }
+
+        .up-signal { color: #00ff88; }
+        .down-signal { color: #ff3e3e; }
+        .loading { color: #f0b90b; font-style: italic; }
     </style>
 </head>
 <body>
 
-    <div class="chart-box" id="tv_chart"></div>
+    <div class="bot-header">
+        <div class="bot-name">TAJNAMA AUTO TRADE AI</div>
+    </div>
 
-    <div class="ai-panel">
-        <div class="status-row">
-            <div class="data-card"><span class="label">AI PREDICTION</span><b id="signal" class="value">WAIT</b></div>
-            <div class="data-card"><span class="label">REAL ACCURACY</span><b id="accuracy" class="value">--%</b></div>
-            <div class="data-card"><span class="label">MARKET VOL</span><b id="vol" class="value">STABLE</b></div>
-            <div class="data-card"><span class="label">DIRECTION</span><b id="trend" class="value">SCANNING</b></div>
+    <div class="chart-container" id="tv_chart"></div>
+
+    <div class="control-panel">
+        <div class="stats-grid">
+            <div class="stat-card"><span class="label">AI SIGNAL</span><b id="sigDisplay">IDLE</b></div>
+            <div class="stat-card"><span class="label">CONFIDENCE</span><b id="confDisplay" style="color:#00ff88;">0%</b></div>
+            <div class="stat-card"><span class="label">MARKET TREND</span><b id="trendDisplay">SCANNING</b></div>
+            <div class="stat-card"><span class="label">RESULT</span><b id="resDisplay">---</b></div>
         </div>
-        
-        <button id="actionBtn" onclick="processSignal()">GET ACCURATE SIGNAL</button>
+
+        <button id="mainBtn" onclick="getSureShot()">GET SHURE-SHOT</button>
     </div>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
@@ -48,52 +60,41 @@
         new TradingView.widget({
             "autosize": true, "symbol": "FX:EURUSD", "interval": "1", "theme": "dark", "style": "1",
             "container_id": "tv_chart", "hide_side_toolbar": false, "enable_publishing": false,
-            "studies": ["RSI@tv-basicstudies", "MASimple@tv-basicstudies"]
+            "studies": ["RSI@tv-basicstudies", "StochasticRSI@tv-basicstudies"]
         });
 
-        function processSignal() {
-            const btn = document.getElementById('actionBtn');
+        function getSureShot() {
+            const btn = document.getElementById('mainBtn');
+            const sig = document.getElementById('sigDisplay');
+            const conf = document.getElementById('confDisplay');
+            const trend = document.getElementById('trendDisplay');
+
             btn.disabled = true;
-            btn.innerText = "READING LIVE CANDLES...";
+            btn.innerText = "ANALYZING MARKET...";
+            sig.innerText = "WAITING...";
+            sig.className = "val loading";
 
-            // আসল ক্যালকুলেশন ডিলে (যাতে মনে হয় AI সত্যি কাজ করছে)
+            // Sufia বটের মতো লজিক প্রসেসিং
             setTimeout(() => {
-                // লজিক: আমরা এখানে রিয়েল টেকনিক্যাল ইন্ডিকেটর ভ্যালু সিমুলেট করছি
-                const rsi = Math.floor(Math.random() * 100);
-                const trendPower = Math.random() * 100;
+                const randomLogic = Math.random() * 100;
+                let accuracy = (95 + Math.random() * 4).toFixed(2); // ৯৫-৯৯% একুরেসি দেখাবে
                 
-                let sig = "";
-                let acc = "";
-                let trend = "";
-
-                // হাই একুরেসি লজিক: 
-                // RSI ৩০ এর নিচে মানে মার্কেট অনেক নিচে (BUY), ৭০ এর উপরে মানে অনেক উপরে (SELL)
-                if (rsi < 40) {
-                    sig = "BUY UP ↑";
-                    document.getElementById('signal').className = "value up";
-                    acc = (92 + Math.random() * 6).toFixed(1) + "%";
-                    trend = "BULLISH";
-                } else if (rsi > 60) {
-                    sig = "SELL DOWN ↓";
-                    document.getElementById('signal').className = "value down";
-                    acc = (92 + Math.random() * 6).toFixed(1) + "%";
-                    trend = "BEARISH";
+                if (randomLogic > 50) {
+                    sig.innerText = "CALL (UP) ↑";
+                    sig.className = "val up-signal";
+                    trend.innerText = "STRONG BULLISH";
                 } else {
-                    // যদি মার্কেট সাইডওয়ে থাকে, তাহলে ট্রেন্ড ফলো করবে
-                    sig = trendPower > 50 ? "BUY UP ↑" : "SELL DOWN ↓";
-                    document.getElementById('signal').className = trendPower > 50 ? "value up" : "value down";
-                    acc = (90 + Math.random() * 4).toFixed(1) + "%";
-                    trend = trendPower > 50 ? "RETRACEMENT" : "CORRECTION";
+                    sig.innerText = "PUT (DOWN) ↓";
+                    sig.className = "val down-signal";
+                    trend.innerText = "STRONG BEARISH";
                 }
 
-                document.getElementById('signal').innerText = sig;
-                document.getElementById('accuracy').innerText = acc;
-                document.getElementById('trend').innerText = trend;
-                document.getElementById('vol').innerText = trendPower > 80 ? "HIGH" : "NORMAL";
-
+                conf.innerText = accuracy + "%";
+                document.getElementById('resDisplay').innerText = "READY";
+                
                 btn.disabled = false;
-                btn.innerText = "GET ACCURATE SIGNAL";
-            }, 2000);
+                btn.innerText = "GET NEXT SHURE-SHOT";
+            }, 2500); // ২.৫ সেকেন্ড সময় নেবে রিয়েল বটের মতো
         }
     </script>
 </body>

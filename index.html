@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TAJNAMA AI MASTER FULLSCREEN</title>
+    <title>TAJNAMA AI MASTER - FIXED</title>
     <style>
-        * { box-sizing: border-box; }
-        body { background-color: #ffffff; color: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 5px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #ffffff; color: #000; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding: 5px; }
         
-        .header { background: #d4af37; color: black; padding: 10px; font-size: 18px; font-weight: bold; border-radius: 8px; margin-bottom: 5px; flex-shrink: 0; }
+        .header { background: #d4af37; color: black; padding: 10px; font-size: 18px; font-weight: bold; border-radius: 8px; text-align: center; margin-bottom: 5px; }
         
-        .pair-selector { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 5px; flex-shrink: 0; }
+        .pair-selector { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 5px; }
         .pair-btn { flex: 1; background: #fff; color: #1a73e8; border: 1.5px solid #1a73e8; padding: 8px 2px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
         
-        .time-selector { display: flex; justify-content: center; gap: 8px; margin-bottom: 5px; flex-shrink: 0; }
+        .time-selector { display: flex; justify-content: center; gap: 8px; margin-bottom: 5px; }
         .time-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .time-btn.active { background: #1a73e8; color: white; }
 
-        /* চার্ট কন্টেইনারকে ফ্লেক্সিবল করা হয়েছে যাতে এটি স্ক্রিনের বাকি সব জায়গা দখল করে */
-        #tv_chart_container { flex-grow: 1; width: 100%; border: 1.5px solid #ccc; border-radius: 10px; overflow: hidden; position: relative; }
+        /* চার্ট এরিয়া যা স্ক্রিনের বাকি জায়গা নিবে */
+        #tv_chart_container { flex: 1; width: 100%; border: 1.5px solid #ccc; border-radius: 10px; overflow: hidden; position: relative; min-height: 300px; }
 
-        .prediction-box { background: #fff; border: 2px solid #1a73e8; border-radius: 12px; padding: 8px; margin-top: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; flex-shrink: 0; }
-        .stat { padding: 5px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; }
+        /* সিগন্যাল বক্স */
+        .prediction-box { background: #fff; border: 2px solid #1a73e8; border-radius: 12px; padding: 8px; margin-top: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .stat { padding: 5px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee; text-align: center; }
         span { font-size: 9px; color: #666; font-weight: bold; display: block; }
         #sigText, #winRate, #entryTime, #candlePos { font-size: 15px; font-weight: 900; }
         
         .call { color: #28a745; }
         .put { color: #dc3545; }
         
-        #actionBtn { background: #1a73e8; color: white; border: none; padding: 12px; width: 100%; border-radius: 25px; font-weight: bold; font-size: 16px; margin-top: 5px; flex-shrink: 0; cursor: pointer; }
+        /* আপনার সেই সিগন্যাল বাটন */
+        #actionBtn { background: #1a73e8; color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 5px; cursor: pointer; box-shadow: 0 4px 10px rgba(26,115,232,0.3); }
     </style>
 </head>
 <body>
@@ -97,7 +99,7 @@
 
         function getSignal() {
             const btn = document.getElementById('actionBtn');
-            btn.innerText = "AI ANALYZING 98%...";
+            btn.innerText = "AI ANALYZING MARKET...";
             setTimeout(() => {
                 const now = new Date();
                 const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
@@ -110,7 +112,7 @@
                 document.getElementById('winRate').innerText = Math.floor(Math.random() * 3 + 96) + "%";
                 document.getElementById('entryTime').innerText = timeStr;
                 btn.innerText = "GET CONFIRM SIGNAL";
-            }, 800);
+            }, 1000);
         }
     </script>
 </body>
